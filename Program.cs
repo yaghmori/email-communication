@@ -1,5 +1,5 @@
 using EmailCommunication.Models;
-using EmailCommunication.Services;
+using EmailCommunication.Services.Email;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -28,20 +28,19 @@ class Program
 
         services.AddSingleton<IConfiguration>(configuration);
         services.AddSingleton<EmailKafkaPublisher>();
-        services.AddSingleton<IEmailTcpClient, EmailTcpClient>();
+        services.AddSingleton<EmailTcpClient>();
         services.AddSingleton<IEmailService, EmailService>();
 
         var serviceProvider = services.BuildServiceProvider();
         var logger = serviceProvider.GetRequiredService<ILogger<Program>>();
         var emailService = serviceProvider.GetRequiredService<IEmailService>();
-        var tcpClient = serviceProvider.GetRequiredService<IEmailTcpClient>();
 
         try
         {
             // Interactive email sending
             var defaultRecipient =
                 configuration["EmailService:DefaultRecipient"] ?? "test@example.com";
-            await RunInteractiveModeAsync(emailService, logger, tcpClient, defaultRecipient);
+            await RunInteractiveModeAsync(emailService, logger, defaultRecipient);
         }
         catch (Exception ex)
         {
@@ -60,7 +59,6 @@ class Program
     static async Task RunInteractiveModeAsync(
         IEmailService emailService,
         ILogger logger,
-        IEmailTcpClient tcpClient,
         string defaultRecipient
     )
     {
@@ -175,26 +173,7 @@ class Program
                 {
                     selectedMode = "Tcp";
                     Console.WriteLine("Selected: TCP");
-
-                    // Ensure TCP connection
-                    if (!tcpClient.IsConnected)
-                    {
-                        Console.WriteLine("Connecting to TCP server...");
-                        var connected = await tcpClient.ConnectAsync();
-                        if (!connected)
-                        {
-                            logger.LogWarning(
-                                "Could not connect to TCP server. Will attempt to reconnect when sending."
-                            );
-                            Console.WriteLine(
-                                "⚠ Could not connect to TCP server. Will retry on send.\n"
-                            );
-                        }
-                        else
-                        {
-                            Console.WriteLine("✓ Connected to TCP server\n");
-                        }
-                    }
+                    Console.WriteLine("Will connect to TCP server when sending...\n");
                 }
 
                 // Send the email
