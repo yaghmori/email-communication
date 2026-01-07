@@ -71,3 +71,4 @@ G:\email-communication\obj\Debug\net10.0\refint\EmailCommunication.dll
 G:\email-communication\obj\Debug\net10.0\EmailCommunication.pdb
 G:\email-communication\obj\Debug\net10.0\EmailCommunication.genruntimeconfig.cache
 G:\email-communication\obj\Debug\net10.0\ref\EmailCommunication.dll
+G:\email-communication\obj\Debug\net10.0\EmailCommunication.sourcelink.json
