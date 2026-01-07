@@ -36,17 +36,6 @@ class Program
         var emailService = serviceProvider.GetRequiredService<IEmailService>();
         var tcpClient = serviceProvider.GetRequiredService<IEmailTcpClient>();
 
-        logger.LogInformation("Email Communication Client Started");
-        logger.LogInformation(
-            "TCP Server: {Host}:{Port}",
-            configuration["Tcp:Host"],
-            configuration["Tcp:Port"]
-        );
-        logger.LogInformation(
-            "Kafka Bootstrap Servers: {BootstrapServers}",
-            configuration["Kafka:BootstrapServers"]
-        );
-
         try
         {
             // Interactive email sending

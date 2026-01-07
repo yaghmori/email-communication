@@ -67,3 +67,4 @@ public class EmailPayload
     [JsonPropertyName("metadata")]
     public Dictionary<string, object>? Metadata { get; set; }
 }
+
